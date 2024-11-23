@@ -4,16 +4,13 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
 
-AUTH = os.getenv("AUTH")
 SBR_WEBDRIVER = os.getenv("SBR_WEBDRIVER")
 
 
-
 def scrape_website(website):
-    print("Launching chrome browser...")
+    print("Connecting to Scraping Browser...")
     sbr_connection = ChromiumRemoteConnection(SBR_WEBDRIVER, "goog", "chrome")
     with Remote(sbr_connection, options=ChromeOptions()) as driver:
         driver.get(website)
@@ -29,7 +26,8 @@ def scrape_website(website):
         print("Navigated! Scraping page content...")
         html = driver.page_source
         return html
-    
+
+
 def extract_body_content(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
     body_content = soup.body
@@ -37,12 +35,14 @@ def extract_body_content(html_content):
         return str(body_content)
     return ""
 
+
 def clean_body_content(body_content):
     soup = BeautifulSoup(body_content, "html.parser")
 
     for script_or_style in soup(["script", "style"]):
         script_or_style.extract()
 
+    # Get text or further process the content
     cleaned_content = soup.get_text(separator="\n")
     cleaned_content = "\n".join(
         line.strip() for line in cleaned_content.splitlines() if line.strip()

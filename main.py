@@ -12,6 +12,7 @@ from scrape import (
     clean_body_content, 
     extract_body_content
 )
+from parse import parse_with_ollama
 
 
 
@@ -44,3 +45,5 @@ if "dom_content" in st.session_state:
             
             # Parse the content with Ollama
             dom_chunks = split_dom_content(st.session_state.dom_content)
+            parsed_result = parse_with_ollama(dom_chunks, parse_description)
+            st.write(parsed_result)
